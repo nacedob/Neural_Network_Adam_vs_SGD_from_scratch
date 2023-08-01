@@ -1,10 +1,9 @@
 import numpy as np
-import Input
-import NeuralNetwork
+from InputData import InputData
+from NeuralNetwork import NeuralNetwork
 import Optimizers
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
-
 
 
 #------------------------------------------------------------------------------
@@ -15,7 +14,7 @@ if __name__ == "__main__":
     
     import time
     # Load training and test data
-    training_data, validation_data, test_data = Input.load_mnist_database()
+    training_data, validation_data, test_data = InputData.load_mnist_database()
     
     # Create instances of NeuralNetwork class to compare SGD and Adam
     clasificadorDigitosSGD = NeuralNetwork(784, [28], 10)

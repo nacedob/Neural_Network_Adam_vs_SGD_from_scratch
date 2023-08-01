@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import Functions
-import Input
+from InputData import InputData
 
 
 # ------------------------------------------------------------------------------
@@ -316,7 +316,7 @@ class NeuralNetwork:
 
         for epoch in range(number_epochs):
 
-            splitted_in_mini_batches = Input.mini_batch_data(training_data, mini_batch_size)
+            splitted_in_mini_batches = InputData.mini_batch_data(training_data, mini_batch_size)
 
             for mini_batch in splitted_in_mini_batches:
 
@@ -335,7 +335,7 @@ class NeuralNetwork:
 
                 self.weights, self.biases = \
                     optimizer.train(self.weights, derivative_weights, self.biases, derivative_biases,
-                                    iteration_number=epoch + 1, mini_batch_sizeini_batch_size=mini_batch_size)
+                                    iteration_number=epoch + 1, mini_batch_size=mini_batch_size)
 
             if test_data:
                 epoch_performance = self.check_performance(test_data)

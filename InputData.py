@@ -5,7 +5,7 @@
 import numpy as np
 
 
-class Input:
+class InputData:
     """
     Class Input contains static methods to load training, validation and test sets
     as well as convert any picture to a Numpy array of len = 784
@@ -14,7 +14,7 @@ class Input:
     @staticmethod
     def load_mnist_database():
         """
-        Loads the MNIST database splitted in 3 subsets: training, test and
+        Loads the MNIST database split in 3 subsets: training, test and
         validation. This data is also treated to be used for our NeuralNetwork.
         Adapted from M.Nielsen GitHub project
 
@@ -29,13 +29,13 @@ class Input:
         training_data, validation_data, test_data = pickle.load(f, encoding='iso-8859-1')
         f.close()
         training_inputs = [np.reshape(x, (784, 1)) for x in training_data[0]]
-        training_results = [Input.vectorized_result(y) for y in training_data[1]]
+        training_results = [InputData.vectorized_result(y) for y in training_data[1]]
         training_data = list(zip(training_inputs, training_results))
         validation_inputs = [np.reshape(x, (784, 1)) for x in validation_data[0]]
         validation_data = list(zip(validation_inputs, validation_data[1]))
         test_inputs = [np.reshape(x, (784, 1)) for x in test_data[0]]
         test_data = list(zip(test_inputs, test_data[1]))
-        return (training_data, validation_data, test_data)
+        return training_data, validation_data, test_data
 
     @staticmethod
     def vectorized_result(j):
