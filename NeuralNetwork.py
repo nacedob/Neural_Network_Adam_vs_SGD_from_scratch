@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import Functions
-from InputData import InputData
+import InputData
 
 
 # ------------------------------------------------------------------------------
@@ -47,12 +47,12 @@ class NeuralNetwork:
         """Constructor of neural net.
 
         Parameters:
-        input_size (integer): dimension of the input points
+        input_size (int): dimension of the input points
         hiddens_size (list): list containig at each index the number of neurons
                              for that layer. For example [2,7,3 ] will have three
                              hidden layers consisting of 2, 7 and 3 neurons
                              respectively
-        output_size (integer): dimension of the output points
+        output_size (int): dimension of the output points
         learning_rate (double): learning rate to train the net.
         activation_function_name (string): specify the activation function. It contains
                              the name of the method. Method must be defined
@@ -137,7 +137,7 @@ class NeuralNetwork:
         ----------
         prediction : double / list
             Prediction of our NN at some points.
-        real_output : integer / list
+        real_output : int / list
             Real known output from the training set
 
         Returns
@@ -160,7 +160,7 @@ class NeuralNetwork:
         ----------
         prediction : double / list
             Prediction of our NN at some points.
-        real_output : integer / list
+        real_output : int / list
             Real known output from the training set
 
         Returns
@@ -183,18 +183,18 @@ class NeuralNetwork:
 
         Returns
         -------
-        layerOutput : integer/list
+        layerOutput : int/list
             Prediction / output of the neural network. Size of this list is
             specified in the constructor by output_size.
         """
         # Compute output for first hidden layer
-        layerOutput = self.activation_function(np.dot(self.weights[0], X) + self.biases[0])
+        layer_output = self.activation_function(np.dot(self.weights[0], X) + self.biases[0])
 
         # Compute output for remaining hidden layers and output layer
         for i in range(1, len(self.weights)):
-            layerOutput = self.activation_function(np.dot(self.weights[i], layerOutput) + self.biases[i])
+            layer_output = self.activation_function(np.dot(self.weights[i], layer_output) + self.biases[i])
 
-        return layerOutput
+        return layer_output
 
     def predict(self, x):
         """
@@ -283,7 +283,7 @@ class NeuralNetwork:
             derivative_bias_point[-layer] = delta
             derivative_bias_weight[-layer] = np.dot(delta, activations[-layer - 1].T)
 
-        return (derivative_bias_weight, derivative_bias_point)
+        return derivative_bias_weight, derivative_bias_point
 
     def train(self, optimizer, training_data, number_epochs, mini_batch_size,
               test_data=None, plot_test=False):
@@ -292,10 +292,14 @@ class NeuralNetwork:
 
         Parameters
         ----------
+        optimizer: Optimizer
+            Optimizer used to train net
         training_data: list
             Training data consisting in inputs and expected ouputs
-        number_epochs : integer
+        number_epochs : int
             Represents the number of iterations made to train the neural network.
+        mini_batch_size: int
+            mini batch sized used to train net
         test_data : boolean, optional
             Expresses if you want to test the neural network during training.
             The default is False.
@@ -344,7 +348,7 @@ class NeuralNetwork:
                                                                 round(100 * epoch_performance / test_data_length, 2)))
             else:
                 print(f"Epoch {epoch} complete")
-        if plot_test == True:
+        if plot_test:
             self.plot_performance(test_data_length)
 
     def check_performance(self, test_data):
@@ -355,9 +359,6 @@ class NeuralNetwork:
         ----------
         test_data : list of numpy arrays
             Training set.
-        plot_statistics : boolean, optional
-            Expresses if you want to see a plot to see graphically the
-            performance. The default is False.
 
         Returns
         -------
@@ -375,7 +376,7 @@ class NeuralNetwork:
 
         Parameters
         ----------
-        top : integer
+        top : int
             Number of training points.
 
         Returns
@@ -383,13 +384,13 @@ class NeuralNetwork:
         None.
         """
 
-        xAxis = list(range(0, len(self.performance)))
-        topPerfomanceLine = top * np.ones(len(self.performance), list)
+        x_axis = list(range(0, len(self.performance)))
+        top_perfomance_line = top * np.ones(len(self.performance), list)
 
-        performancePlot = plt.figure()
-        plt.figure(performancePlot)
-        plt.plot(xAxis, self.performance, 'o-.')
-        plt.plot(xAxis, topPerfomanceLine, ":k")
+        performance_plot = plt.figure()
+        plt.figure(performance_plot)
+        plt.plot(x_axis, self.performance, 'o-.')
+        plt.plot(x_axis, top_perfomance_line, ":k")
         plt.title("# cifras bien clasificadas")
         plt.xlabel("Épocas")
         plt.ylabel("Aciertos")

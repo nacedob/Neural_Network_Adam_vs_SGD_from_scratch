@@ -1,14 +1,10 @@
 import numpy as np
-from InputData import InputData
+import InputData
 from NeuralNetwork import NeuralNetwork
 import Optimizers
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 
-
-#------------------------------------------------------------------------------
-# MAIN PROGRAM ----------------------------------------------------------------
-#------------------------------------------------------------------------------
 
 if __name__ == "__main__":
     

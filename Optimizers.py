@@ -5,6 +5,7 @@
 from abc import ABC, abstractmethod
 import numpy as np
 
+
 class Optimizer(ABC):
     """
         Interface to represent learning algorithms to tune
