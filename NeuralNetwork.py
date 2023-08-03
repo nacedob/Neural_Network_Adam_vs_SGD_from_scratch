@@ -1,7 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import Functions
 import InputData
+import Functions as Fn
+import Optimizers
 
 
 # ------------------------------------------------------------------------------
@@ -42,7 +43,8 @@ class NeuralNetwork:
                     that it may no be accuarate  """
 
     def __init__(self, input_size, hidden_sizes, output_size,
-                 activation_function_name="sigmoid", cost_function_name="quadratic_error"):
+                 activation_function: Fn.ActivationFunction = Fn.Sigmoid(),
+                 cost_function: Fn.CostFunction = Fn.QuadracticError()):
 
         """Constructor of neural net.
 
@@ -78,107 +80,26 @@ class NeuralNetwork:
                         for currentLayer, previousLayer
                         in zip(self.architecture[1:], self.architecture[:-1])]
 
-        # STORE ACTIVATION AND COST FUNCTION NAME
-        self.activation_function_name = activation_function_name
-        self.cost_function_name = cost_function_name
-
         # IN CASE TEST DATA SET HAS BEEN PROVIDED, STORE PERFORMANCE EVOLUTION
         # WITH TRAINING EPOCHS
         self.performance = []
 
-    def activation_function(self, x):
-        """Activation function used for the NN. It is specified in the constructor.
-        Used for the backwards and feedforward methods.
-        Parameters
-        ----------
-        x : double / list
-            Point where you want to compute the activation function.
+        # Activation function
+        self.activation_function = activation_function.function
+        self.activation_derivative = activation_function.derivative_function
 
-        Returns
-        -------
-        TYPE: double/list
-            Activation function at that point.
-        """
-        if self.activation_function_name == "sigmoid":
-            # SIGMOID
-            return Functions.sigmoid(x)
+        # Cost function
+        self.cost_function = cost_function.function
+        self.cost_derivative = cost_function.derivative_function
 
-        elif self.activation_function_name == "tanh":
-            return np.tanh(x)
 
-    def activation_derivative(self, x):
-        """
-        Derivative of activation function used for the NN. It is specified in
-        the constructor. Used for the backwards training
-
-        Parameters
-        ----------
-        x : double / list
-            Point where you want to compute the derivative of activation function.
-
-        Returns
-        -------
-        TYPE: double/list
-            Derivative of activation function at that point.
-        """
-        if self.activation_function_name == "sigmoid":
-            # SIGMOID
-            return Functions.sigmoid_derivative(x)
-
-        elif self.activation_function_name == "tanh":
-            return 1 - np.power(np.tanh(x), 2)
-
-    def cost_function(self, prediction, real_output):
-        """
-        Activation function used for the NN. It is specified in the constructor.
-        Used for the backwards and test methods.
-
-        Parameters
-        ----------
-        prediction : double / list
-            Prediction of our NN at some points.
-        real_output : int / list
-            Real known output from the training set
-
-        Returns
-        -------
-        TYPE: double/list
-            Activation function at that point.
-        """
-
-        if self.cost_function_name == "quadratic_error":
-            # QUADRATIC ERROR
-            return Functions.quadratic_error(prediction, real_output)
-        # else:
-
-    def cost_derivative(self, prediction, real_output):
-        """
-        Derivative of cost function used for the NN. It is specified in
-        the constructor. Used for the backwards training
-
-        Parameters
-        ----------
-        prediction : double / list
-            Prediction of our NN at some points.
-        real_output : int / list
-            Real known output from the training set
-
-        Returns
-        -------
-        TYPE: double/list
-            Derivative of activation function at that point.
-        """
-        if self.cost_function_name == "quadratic_error":
-            # QUADRATIC ERROR
-            return Functions.quadratic_error_derivative(prediction, real_output)
-
-    def feedforward(self, X):
+    def feedforward(self, x):
         """
         Used to compute the ouput/prediction of the neural network
 
         Parameters
         ----------
-        X : double/list
+        x : double/list
             Points where you want to predict  a result.
 
         Returns
@@ -188,7 +109,7 @@ class NeuralNetwork:
             specified in the constructor by output_size.
         """
         # Compute output for first hidden layer
-        layer_output = self.activation_function(np.dot(self.weights[0], X) + self.biases[0])
+        layer_output = self.activation_function(np.dot(self.weights[0], x) + self.biases[0])
 
         # Compute output for remaining hidden layers and output layer
         for i in range(1, len(self.weights)):
