@@ -7,7 +7,7 @@
 
     <groupId>IgnacioAcedoBlanco</groupId>
     <artifactId>NeuralNetworkTFG</artifactId>
-    <version>1.1.0.0</version>
+    <version>1.0.0.0</version>
 
     <properties>
         <!-- Agrega aquí tus propiedades específicas del proyecto, si es necesario -->
