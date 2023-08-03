@@ -1,7 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import Functions
-import Input
+import InputData
+import Functions as Fn
+import Optimizers
 
 
 # ------------------------------------------------------------------------------
@@ -42,17 +43,18 @@ class NeuralNetwork:
                     that it may no be accuarate  """
 
     def __init__(self, input_size, hidden_sizes, output_size,
-                 activation_function_name="sigmoid", cost_function_name="quadratic_error"):
+                 activation_function: Fn.ActivationFunction = Fn.Sigmoid(),
+                 cost_function: Fn.CostFunction = Fn.QuadracticError()):
 
         """Constructor of neural net.
 
         Parameters:
-        input_size (integer): dimension of the input points
+        input_size (int): dimension of the input points
         hiddens_size (list): list containig at each index the number of neurons
                              for that layer. For example [2,7,3 ] will have three
                              hidden layers consisting of 2, 7 and 3 neurons
                              respectively
-        output_size (integer): dimension of the output points
+        output_size (int): dimension of the output points
         learning_rate (double): learning rate to train the net.
         activation_function_name (string): specify the activation function. It contains
                              the name of the method. Method must be defined
@@ -78,123 +80,42 @@ class NeuralNetwork:
                         for currentLayer, previousLayer
                         in zip(self.architecture[1:], self.architecture[:-1])]
 
-        # STORE ACTIVATION AND COST FUNCTION NAME
-        self.activation_function_name = activation_function_name
-        self.cost_function_name = cost_function_name
-
         # IN CASE TEST DATA SET HAS BEEN PROVIDED, STORE PERFORMANCE EVOLUTION
         # WITH TRAINING EPOCHS
         self.performance = []
 
-    def activation_function(self, x):
-        """Activation function used for the NN. It is specified in the constructor.
-        Used for the backwards and feedforward methods.
-        Parameters
-        ----------
-        x : double / list
-            Point where you want to compute the activation function.
+        # Activation function
+        self.activation_function = activation_function.function
+        self.activation_derivative = activation_function.derivative_function
 
-        Returns
-        -------
-        TYPE: double/list
-            Activation function at that point.
-        """
-        if self.activation_function_name == "sigmoid":
-            # SIGMOID
-            return Functions.sigmoid(x)
+        # Cost function
+        self.cost_function = cost_function.function
+        self.cost_derivative = cost_function.derivative_function
 
-        elif self.activation_function_name == "tanh":
-            return np.tanh(x)
 
-    def activation_derivative(self, x):
-        """
-        Derivative of activation function used for the NN. It is specified in
-        the constructor. Used for the backwards training
-
-        Parameters
-        ----------
-        x : double / list
-            Point where you want to compute the derivative of activation function.
-
-        Returns
-        -------
-        TYPE: double/list
-            Derivative of activation function at that point.
-        """
-        if self.activation_function_name == "sigmoid":
-            # SIGMOID
-            return Functions.sigmoid_derivative(x)
-
-        elif self.activation_function_name == "tanh":
-            return 1 - np.power(np.tanh(x), 2)
-
-    def cost_function(self, prediction, real_output):
-        """
-        Activation function used for the NN. It is specified in the constructor.
-        Used for the backwards and test methods.
-
-        Parameters
-        ----------
-        prediction : double / list
-            Prediction of our NN at some points.
-        real_output : integer / list
-            Real known output from the training set
-
-        Returns
-        -------
-        TYPE: double/list
-            Activation function at that point.
-        """
-
-        if self.cost_function_name == "quadratic_error":
-            # QUADRATIC ERROR
-            return Functions.quadratic_error(prediction, real_output)
-        # else:
-
-    def cost_derivative(self, prediction, real_output):
-        """
-        Derivative of cost function used for the NN. It is specified in
-        the constructor. Used for the backwards training
-
-        Parameters
-        ----------
-        prediction : double / list
-            Prediction of our NN at some points.
-        real_output : integer / list
-            Real known output from the training set
-
-        Returns
-        -------
-        TYPE: double/list
-            Derivative of activation function at that point.
-        """
-        if self.cost_function_name == "quadratic_error":
-            # QUADRATIC ERROR
-            return Functions.quadratic_error_derivative(prediction, real_output)
-
-    def feedforward(self, X):
+    def feedforward(self, x):
         """
         Used to compute the ouput/prediction of the neural network
 
         Parameters
         ----------
-        X : double/list
+        x : double/list
             Points where you want to predict  a result.
 
         Returns
         -------
-        layerOutput : integer/list
+        layerOutput : int/list
             Prediction / output of the neural network. Size of this list is
             specified in the constructor by output_size.
         """
         # Compute output for first hidden layer
-        layerOutput = self.activation_function(np.dot(self.weights[0], X) + self.biases[0])
+        layer_output = self.activation_function(np.dot(self.weights[0], x) + self.biases[0])
 
         # Compute output for remaining hidden layers and output layer
         for i in range(1, len(self.weights)):
-            layerOutput = self.activation_function(np.dot(self.weights[i], layerOutput) + self.biases[i])
+            layer_output = self.activation_function(np.dot(self.weights[i], layer_output) + self.biases[i])
 
-        return layerOutput
+        return layer_output
 
     def predict(self, x):
         """
@@ -283,7 +204,7 @@ class NeuralNetwork:
             derivative_bias_point[-layer] = delta
             derivative_bias_weight[-layer] = np.dot(delta, activations[-layer - 1].T)
 
-        return (derivative_bias_weight, derivative_bias_point)
+        return derivative_bias_weight, derivative_bias_point
 
     def train(self, optimizer, training_data, number_epochs, mini_batch_size,
               test_data=None, plot_test=False):
@@ -292,10 +213,14 @@ class NeuralNetwork:
 
         Parameters
         ----------
+        optimizer: Optimizer
+            Optimizer used to train net
         training_data: list
             Training data consisting in inputs and expected ouputs
-        number_epochs : integer
+        number_epochs : int
             Represents the number of iterations made to train the neural network.
+        mini_batch_size: int
+            mini batch sized used to train net
         test_data : boolean, optional
             Expresses if you want to test the neural network during training.
             The default is False.
@@ -316,7 +241,7 @@ class NeuralNetwork:
 
         for epoch in range(number_epochs):
 
-            splitted_in_mini_batches = Input.mini_batch_data(training_data, mini_batch_size)
+            splitted_in_mini_batches = InputData.mini_batch_data(training_data, mini_batch_size)
 
             for mini_batch in splitted_in_mini_batches:
 
@@ -335,7 +260,7 @@ class NeuralNetwork:
 
                 self.weights, self.biases = \
                     optimizer.train(self.weights, derivative_weights, self.biases, derivative_biases,
-                                    iteration_number=epoch + 1, mini_batch_sizeini_batch_size=mini_batch_size)
+                                    iteration_number=epoch + 1, mini_batch_size=mini_batch_size)
 
             if test_data:
                 epoch_performance = self.check_performance(test_data)
@@ -344,7 +269,7 @@ class NeuralNetwork:
                                                                 round(100 * epoch_performance / test_data_length, 2)))
             else:
                 print(f"Epoch {epoch} complete")
-        if plot_test == True:
+        if plot_test:
             self.plot_performance(test_data_length)
 
     def check_performance(self, test_data):
@@ -355,9 +280,6 @@ class NeuralNetwork:
         ----------
         test_data : list of numpy arrays
             Training set.
-        plot_statistics : boolean, optional
-            Expresses if you want to see a plot to see graphically the
-            performance. The default is False.
 
         Returns
         -------
@@ -375,7 +297,7 @@ class NeuralNetwork:
 
         Parameters
         ----------
-        top : integer
+        top : int
             Number of training points.
 
         Returns
@@ -383,13 +305,13 @@ class NeuralNetwork:
         None.
         """
 
-        xAxis = list(range(0, len(self.performance)))
-        topPerfomanceLine = top * np.ones(len(self.performance), list)
+        x_axis = list(range(0, len(self.performance)))
+        top_perfomance_line = top * np.ones(len(self.performance), list)
 
-        performancePlot = plt.figure()
-        plt.figure(performancePlot)
-        plt.plot(xAxis, self.performance, 'o-.')
-        plt.plot(xAxis, topPerfomanceLine, ":k")
+        performance_plot = plt.figure()
+        plt.figure(performance_plot)
+        plt.plot(x_axis, self.performance, 'o-.')
+        plt.plot(x_axis, top_perfomance_line, ":k")
         plt.title("# cifras bien clasificadas")
         plt.xlabel("Épocas")
         plt.ylabel("Aciertos")

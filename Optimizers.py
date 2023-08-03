@@ -5,6 +5,7 @@
 from abc import ABC, abstractmethod
 import numpy as np
 
+
 class Optimizer(ABC):
     """
         Interface to represent learning algorithms to tune
@@ -38,9 +39,9 @@ class SGD(Optimizer):
         """
 
         # SGD update
-        weights = [weight_layer - self.learning_rate * derivative_weight_layer / mini_batch_size
+        weights = [weight_layer - self.learning_rate * derivative_weight_layer / kwargs["mini_batch_size"]
                    for weight_layer, derivative_weight_layer in zip(weights, derivative_weights)]
-        biases = [bias_layer - -self.learning_rate * derivative_bias_layer / mini_batch_size
+        biases = [bias_layer - -self.learning_rate * derivative_bias_layer / kwargs["mini_batch_size"]
                   for bias_layer, derivative_bias_layer in zip(biases, derivative_biases)]
 
         return weights, biases
