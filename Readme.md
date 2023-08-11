@@ -2,7 +2,7 @@
  
 This code has been created as a Final Bachelor Project (Double Degree in Mathematics and Physics - Universidad Complutense de Madrid), or TFG in my original language -Spanish.
 
-I have created this code on my own, based on Michael Nielsen idea. The main objective is to be able to create a Neural Network able to classify handwritten digits. For that purpose, I have chosen MNIST database to carry out network training and to test performance.
+I have created this code on my own, based on Michael Nielsen idea's. The main objective is to be able to create a Neural Network able to classify handwritten digits. For that purpose, I have chosen MNIST database to carry out network training and to test performance.
 
 The main idea is to compare theoretically and experimentally the use of different Optimizers to train networks. In this case, I have chosen to train our neural network first with classic Stochastic Gradient Descent (SGD) and [Adam](https://arxiv.org/abs/1412.6980).
 
