@@ -16,8 +16,8 @@ Project is structured as follows:
 - [Main.py](Main.py): carries out experiment to compare Adam and SGD performances
 - [mnist.pkl.gz](mnist.pkl.gz): mnist database compressed
 - [NeuralNetwork.py](NeuralNetwork.py): contains a class representing Neural Networks, that implements lots of functions to train, check performance, feedforward...
-- [Optimizers.py](Optimizers.py):  file that contains a interface (ABC class) that represents a optimizer. This class is inherited by SGD and Adam Optimizer 
-- [Bachelor Final Thesis.pdf](Bachelor Final Thesis.pdf): Final Bachelor Project presented, where you can learn about basics of Neural Networks studied from a mathematical point of view. Here, some details of this code are explained as well. Unfortunately, as I am Spanish and so my university, it is written in my mother tongue. Nevertheless, it is always a good idea to start learning other languages ;)
+- [Optimizers.py](Optimizers.py):  file that contains an interface (ABC class) that represents a optimizer. This class is inherited by SGD and Adam Optimizer 
+- [Bachelor_Final_Thesis.pdf](Bachelor_Final_Thesis.pdf): Final Bachelor Project presented, where you can learn about basics of Neural Networks studied from a mathematical point of view. Here, some details of this code are explained as well. Unfortunately, as I am Spanish and so do my university, it is written in my mother tongue. Nevertheless, it is always a good idea to start learning other languages ;)
 
 ## Experiment: SGD vs Adam
 
