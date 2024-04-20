@@ -2,11 +2,11 @@
  
 This code has been created as a Final Bachelor Project (Double Degree in Mathematics and Physics - Universidad Complutense de Madrid), or TFG in my original language -Spanish.
 
-I have created this code on my own, based on Michael Nielsen idea's. The main objective is to be able to create a Neural Network able to classify handwritten digits. For that purpose, I have chosen MNIST database to carry out network training and to test performance.
+I have created this code on my own, based on Michael Nielsen's idea. The main objective is to be able to create a Neural Network able to classify handwritten digits. For that purpose, I have chosen MNIST database to carry out network training and to test performance.
 
-The main idea is to compare theoretically and experimentally the use of different Optimizers to train networks. In this case, I have chosen to train our neural network first with classic Stochastic Gradient Descent (SGD) and [Adam](https://arxiv.org/abs/1412.6980).
+The main idea is to compare theoretical  and experimentally the use of different Optimizers to train networks. In this case, I have chosen to train our neural network first with classic Stochastic Gradient Descent (SGD) and [Adam](https://arxiv.org/abs/1412.6980).
 
-As demonstrate in my project, in both cases, Adam over-performs SGD [theoretically proof in pdf](Bachelor Final Thesis.pdf). You can check experimental proof here in python code, just by running main file. This experiment is explained later.
+As demonstrate in my project, in both cases, Adam over-performs SGD [theoretical  proof in pdf](Bachelor Final Thesis.pdf). You can check experimental proof here in python code, just by running main file. This experiment is explained later.
 
 ## Project structure
 
@@ -21,6 +21,6 @@ Project is structured as follows:
 
 ## Experiment: SGD vs Adam
 
-In order to do SGD and Adam comparison, I will create a instance of a NeuralNetwork class and I will clone it. One of these objects will be trained with the help of SGD, while the other one is trained by Adam. Moreover, in console you can check performance of net for each epoch, and when the program is concluded, you can see a bar graph comparing results.
+To compare SGD and Adam, I will instantiate a NeuralNetwork object and make a copy of it. One of these objects will be trained using SGD, while the other will be trained using Adam. Additionally, you can monitor the network's performance for each epoch in the console, and after the program concludes, you can view a bar graph comparing the results.
 
-As you can see in (my bachelor thesis)[Bachelor Final Thesis.pdf], Adam over-performs SGD. Concretely, I have achieved a 95% precision with Adam and a 94% with SGD, so the difference is not so big. On the other hand, regarding total tima spent by both nets to be trained, you can check that SGD is faster. So with this, it can be inferred that SGD might be convenient in cases of very heavy trainings, while precision is not harmed excessively.
+As you can see in (my bachelor thesis)[Bachelor Final Thesis.pdf], Adam outperforms  SGD. Specifically, I have achieved a 95% precision with Adam and a 94% with SGD, so the difference is not so big. On the other hand, regarding total time spent by both nets to be trained, you can check that SGD is faster. Thus, it can be inferred that SGD might be more suitable for cases involving very heavy training, where precision is not significantly compromised.
